@@ -1,0 +1,9 @@
+# Module 1 Lab: Brand Voice Lab (temperature, top-p, logprobs)
+# Python 3.10 or later
+# You don't need to install this by hand: the repo-level requirements.txt includes
+# everything below, and sync.py installs it. Listed here for reference only.
+
+openai>=1.50          # OpenAI API client (supports max_completion_tokens)
+python-dotenv>=1.0    # reads OPENAI_API_KEY from the .env file
+matplotlib>=3.7       # bar chart in Task 4
+ipykernel>=6.0        # Jupyter kernel

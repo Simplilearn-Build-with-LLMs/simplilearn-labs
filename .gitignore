@@ -1,0 +1,10 @@
+# Student-generated files
+results/
+*.my-copy-*
+.labsync_*
+
+# Python / Jupyter
+.ipynb_checkpoints/
+__pycache__/
+.venv/
+.DS_Store

@@ -1,0 +1,5 @@
+openai>=1.66
+python-dotenv>=1.0
+pandas>=2.0
+matplotlib>=3.7
+ipykernel>=6.0
