@@ -14,18 +14,30 @@ What it does
   ran), your version is saved next to it as  <name>.my-copy-MMDD-HHMM.ipynb
   and the fixed version takes its place. Nothing of yours is deleted.
 - Your .env (API key), your own new files and results/ folders are never touched.
+
+Works whether you used  git clone  or  Code > Download ZIP  (no Git needed).
 """
 import argparse
 import datetime
 import hashlib
 import importlib.util
+import io
+import json
+import os
 import shutil
+import ssl
 import subprocess
 import sys
+import urllib.request
+import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 BRANCH = "main"
+REPO = "Simplilearn-Build-with-LLMs/simplilearn-labs"
+ZIP_URL = os.environ.get("LABSYNC_ZIP_URL",
+                         f"https://codeload.github.com/{REPO}/zip/refs/heads/{BRANCH}")
+MANIFEST = ROOT / ".labsync_manifest.json"   # what each file looked like at the last sync
 PROTECTED = {".env"}   # student copies always win; never backed up or replaced
 # pip package name -> import name, used to spot missing packages
 REQUIRED_IMPORTS = {"openai": "openai", "python-dotenv": "dotenv", "pandas": "pandas",
@@ -101,29 +113,15 @@ def ensure_packages():
         print("[sync] Packages installed. If a notebook is already open, restart its kernel.")
 
 
-def main():
-    ap = argparse.ArgumentParser(description="Get the newest labs and fixes.")
-    ap.add_argument("--reset", metavar="LAB",
-                    help="restore a fresh copy of one lab, e.g. --reset 02 (your files are backed up)")
-    args = ap.parse_args()
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
 
-    if shutil.which("git") is None:
-        raise SystemExit("[sync] git is not installed in this environment. Ask your instructor.")
-    if not (ROOT / ".git").exists():
-        raise SystemExit(f"[sync] {ROOT} is not a cloned copy of the labs repo. See README.md.")
 
-    before = set(lab_folders())
+def sync_git(reset_prefix):
+    """Repo was cloned with git: fetch, back up conflicting edits, fast-forward."""
     git("fetch", "--quiet", "origin", BRANCH)
     upstream = set(split_z(git("diff", "--name-only", "-z", "HEAD", f"origin/{BRANCH}")))
     modified, untracked = local_changes()
-
-    reset_prefix = None
-    if args.reset:
-        num = args.reset.strip().lower().removeprefix("lab").zfill(2)
-        matches = [f for f in lab_folders() if f.startswith(f"lab{num}")]
-        if not matches:
-            raise SystemExit(f"[sync] No lab folder found for '{args.reset}'. Labs: {', '.join(lab_folders())}")
-        reset_prefix = matches[0] + "/"
 
     backups, keep = [], {}
     for path in sorted(modified):
@@ -139,10 +137,84 @@ def main():
     git("reset", "--quiet", "--hard", f"origin/{BRANCH}")
     for path, data in keep.items():
         (ROOT / path).write_bytes(data)
+    updated = sorted(p for p in upstream - PROTECTED if (ROOT / p).exists())
+    return updated, backups
+
+
+def download_zip():
+    ctx = None
+    try:
+        import certifi                        # installed with openai; fixes Mac certificate errors
+        ctx = ssl.create_default_context(cafile=certifi.where())
+    except ImportError:
+        pass
+    try:
+        with urllib.request.urlopen(ZIP_URL, timeout=60, context=ctx) as r:
+            return zipfile.ZipFile(io.BytesIO(r.read()))
+    except Exception as e:
+        raise SystemExit(f"[sync] Could not download the labs ({e}). Check your internet connection and try again.")
+
+
+def sync_zip(reset_prefix):
+    """Repo came from Download ZIP: compare with GitHub file by file, no git needed."""
+    zf = download_zip()
+    try:
+        manifest = json.loads(MANIFEST.read_text())
+    except (OSError, ValueError):
+        manifest = {}
+
+    updated, backups, new_manifest = [], [], {}
+    for info in zf.infolist():
+        if info.is_dir() or "/" not in info.filename:
+            continue
+        rel = info.filename.split("/", 1)[1]      # strip the "simplilearn-labs-main/" prefix
+        if not rel:
+            continue
+        data = zf.read(info)
+        up = sha(data)
+        new_manifest[rel] = up
+        local = ROOT / rel
+        if local.exists():
+            if rel in PROTECTED:
+                continue                          # never touch the student's .env
+            mine = sha(local.read_bytes())
+            if mine == up:
+                continue                          # already identical
+            base = manifest.get(rel)
+            in_reset = bool(reset_prefix and rel.startswith(reset_prefix))
+            if base == up and not in_reset:
+                continue                          # only the student changed it -> keep theirs
+            if base != mine or in_reset:
+                backups.append(backup(rel))       # student changed it (or we can't tell) -> keep a copy
+        local.parent.mkdir(parents=True, exist_ok=True)
+        local.write_bytes(data)
+        updated.append(rel)
+    MANIFEST.write_text(json.dumps(new_manifest, indent=0))
+    return sorted(updated), backups
+
+
+def main():
+    ap = argparse.ArgumentParser(description="Get the newest labs and fixes.")
+    ap.add_argument("--reset", metavar="LAB",
+                    help="restore a fresh copy of one lab, e.g. --reset 02 (your files are backed up)")
+    args = ap.parse_args()
+
+    reset_prefix = None
+    if args.reset:
+        num = args.reset.strip().lower().removeprefix("lab").zfill(2)
+        matches = [f for f in lab_folders() if f.startswith(f"lab{num}")]
+        if not matches:
+            raise SystemExit(f"[sync] No lab folder found for '{args.reset}'. Labs: {', '.join(lab_folders())}")
+        reset_prefix = matches[0] + "/"
+
+    before = set(lab_folders())
+    if (ROOT / ".git").exists() and shutil.which("git"):
+        updated, backups = sync_git(reset_prefix)
+    else:
+        updated, backups = sync_zip(reset_prefix)
 
     new_labs = sorted(set(lab_folders()) - before)
-    updated = sorted(p for p in upstream - PROTECTED
-                     if (ROOT / p).exists() and p.split("/")[0] not in new_labs)
+    updated = [p for p in updated if p.split("/")[0] not in new_labs]
 
     if new_labs:
         print("[sync] New lab(s):", ", ".join(new_labs))
@@ -154,7 +226,7 @@ def main():
         print("[sync] Your previous versions were saved as:")
         for p in backups:
             print("   ", p)
-        print("[sync] If one of these notebooks is open: File > Reload Notebook from Disk.")
+        print("[sync] If one of these notebooks is open, close it and open it again.")
     if not (new_labs or updated or backups):
         print("[sync] Already up to date.")
 
