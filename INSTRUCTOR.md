@@ -16,7 +16,7 @@ This repo is **public**: anything pushed to any branch is visible to everyone. K
 
 ## Fix a lab during or before class
 
-Edit, clear outputs, commit, push. Then tell students: **run `python sync.py`, then *File > Reload Notebook from Disk*.**
+Edit, clear outputs, commit, push. Then tell students: **run cell 1 of `START_HERE.ipynb`, then reload the notebook.**
 
 - Students who haven't touched the file get the fix silently.
 - Students who already changed it get the fix, and their version is saved as `*.my-copy-MMDD-HHMM.ipynb` next to it.
@@ -35,7 +35,6 @@ git update-index --skip-worktree .env
 
 - Never commit the key. GitHub scans public repos and providers such as OpenAI revoke leaked keys automatically, which would break every student's lab at once.
 - Share it in the live session or the LMS, never in the repo.
-- If the virtual lab environment can set `OPENAI_API_KEY` as an environment variable for everyone, that's even simpler: students skip the key step.
 - Use a project-scoped key with a spending limit and rotate it after each cohort.
 
 ## Repo layout

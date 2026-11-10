@@ -9,8 +9,8 @@ Generate product descriptions for a homeware retailer and test how temperature a
 | `requirements.txt` | Packages this lab uses, for reference. `sync.py` installs them from the repo-level file. |
 
 ## Before you start
-1. From the repo root, run `python sync.py` to make sure you have the latest version.
-2. If this is your first session, run `START_HERE.ipynb` once (packages + API key).
-3. Open the notebook and run the cells in order.
+1. If this is your first session, do the one-time setup in the repo's `README.md`.
+2. Run cell 1 of `START_HERE.ipynb` to make sure you have the latest version.
+3. Open the notebook, check the kernel (top right) says **.venv**, and run the cells in order.
 
 Plan for about 60 minutes. Model: `gpt-4.1-nano`; the whole lab costs a few cents.

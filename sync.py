@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Get the newest labs and any fixes. Safe to run as often as you like.
 
-    python sync.py              # download new labs + instructor fixes
-    python sync.py --reset 02   # get a fresh copy of Lab 02 (your copy is backed up)
-
-From a notebook cell you can also run:  %run sync.py
+Easiest: run cell 1 of START_HERE.ipynb (it runs  %run sync.py  with the .venv kernel).
+From a terminal, use the .venv Python so packages land in the right place:
+    .venv/bin/python sync.py              (Mac)
+    .venv\\Scripts\\python sync.py          (Windows)
+    ... sync.py --reset 01                (fresh copy of Lab 01; your copy is backed up)
 
 What it does
 - New lab folders appear in the file browser on the left.
@@ -87,7 +88,12 @@ def ensure_packages():
         return
     print("[sync] Installing / updating Python packages (one time, about a minute)...")
     cmd = [sys.executable, "-m", "pip", "install", "-q", "-r", str(req)]
-    if subprocess.run(cmd).returncode != 0 and subprocess.run(cmd + ["--user"]).returncode != 0:
+    # No virtual environment needed: each student has their own lab machine.
+    # Try a normal install, then a user install, then allow it on "externally managed" Pythons.
+    for extra in ([], ["--user"], ["--user", "--break-system-packages"]):
+        if subprocess.run(cmd + extra).returncode == 0:
+            break
+    else:
         print("[sync] Could not install packages automatically. Run:  pip install -r requirements.txt")
         return
     stamp_file.write_text(digest)

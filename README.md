@@ -1,31 +1,50 @@
-# Building with LLMs — Virtual Labs
+# Building with LLMs — Labs
 
-All 8 lab notebooks for the course live here. Each lab appears in this repo about **two days before its live session**, as a new folder on the left.
+All 8 lab notebooks for the course live here. Each lab appears in this repo about **two days before its live session**, as a new folder.
 
-## One-time setup (first session only)
+## Before the setup session: install three things
 
-1. Open a terminal in the virtual lab and clone the repo:
-   ```
-   git clone https://github.com/Simplilearn-Build-with-LLMs/simplilearn-labs.git
-   cd simplilearn-labs
-   ```
-2. Open `START_HERE.ipynb` and run all three cells. This installs the packages and saves the course API key your instructor gives you in class.
+| | Windows | Mac |
+|---|---|---|
+| **Python 3.12** | [python.org/downloads](https://www.python.org/downloads/) → find **3.12** → *Windows installer (64-bit)*. On the first screen, **tick "Add python.exe to PATH"**. | [python.org/downloads](https://www.python.org/downloads/) → find **3.12** → *macOS 64-bit universal2 installer*. |
+| **Git** | [git-scm.com/downloads/win](https://git-scm.com/downloads/win) → keep all default options. | Open **Terminal**, run `git --version`, click **Install** when asked (10–20 minutes). |
+| **VS Code** | [code.visualstudio.com](https://code.visualstudio.com/) | [code.visualstudio.com](https://code.visualstudio.com/) |
+
+Then open VS Code → Extensions (left sidebar) → install **Python** and **Jupyter** (both by Microsoft). Restart VS Code once everything is installed.
+
+## One-time setup (setup session)
+
+**1. Clone the repo.** In VS Code: *Terminal > New Terminal*, then:
+
+```
+git clone https://github.com/Simplilearn-Build-with-LLMs/simplilearn-labs.git
+cd simplilearn-labs
+```
+
+**2. Create the virtual environment and install packages.**
+
+| Windows (PowerShell) | Mac |
+|---|---|
+| `py -3.12 -m venv .venv` | `python3.12 -m venv .venv` |
+| `.venv\Scripts\python -m pip install -r requirements.txt` | `.venv/bin/python -m pip install -r requirements.txt` |
+
+**3. Open the folder:** *File > Open Folder* → select `simplilearn-labs`.
+
+**4. Open `START_HERE.ipynb`.** Click **Select Kernel** (top right) → *Python Environments* → **.venv**. Then run the three cells (Shift + Enter):
+
+- Cell 1 → `Done. Labs available: ...`
+- Cell 2 → paste the course API key from the chat → `Saved to .env`
+- Cell 3 → `Ready.`
 
 That's it. You won't need to set anything up again.
 
 ## Every session
 
-Get the newest labs and any fixes, from the `simplilearn-labs` folder:
+Open the `simplilearn-labs` folder in VS Code, open `START_HERE.ipynb` and **run cell 1**. New labs appear as new folders. Open today's notebook and make sure the kernel (top right) says **.venv**.
 
-```
-python sync.py
-```
+**If the instructor fixes a notebook during class**, run cell 1 again, then reload the notebook (VS Code will ask, or close and reopen it). If you had already changed that notebook, your version is saved next to it as `<name>.my-copy-MMDD-HHMM.ipynb`, so nothing is lost.
 
-(Or open `START_HERE.ipynb` and run the first cell.) Then open today's lab folder on the left.
-
-**If the instructor fixes a notebook during class**, run `python sync.py` again, then *File > Reload Notebook from Disk*. If you had already changed that notebook, your version is saved next to it as `<name>.my-copy-MMDD-HHMM.ipynb`, so nothing is lost.
-
-Want a clean copy of a lab? `python sync.py --reset 02` (your current files are backed up first).
+Prefer the terminal? `.venv\Scripts\python sync.py` (Windows) or `.venv/bin/python sync.py` (Mac). Want a clean copy of a lab? Add `--reset 01`.
 
 ## Lab schedule
 
@@ -44,9 +63,12 @@ Want a clean copy of a lab? `python sync.py --reset 02` (your current files are 
 
 | Problem | Fix |
 |---|---|
-| `ModuleNotFoundError` | Run `python sync.py` (it installs missing packages), then restart the kernel |
-| `AuthenticationError` / 401 | Re-run cell 2 in `START_HERE.ipynb`, then restart the kernel |
-| `not a cloned copy of the labs repo` | Do the one-time setup above (use `git clone`, not *Download ZIP*) |
-| Notebook says the file changed on disk | Choose *Reload*, or *File > Reload Notebook from Disk* |
+| `python`, `py` or `git` "not recognized" / "command not found" | Close and reopen VS Code after installing. Windows: re-run the Python installer → *Modify* → tick *Add to PATH*. |
+| `python3.12: command not found` (Mac) | Python 3.12 isn't installed yet. Install it from python.org (above). |
+| `ModuleNotFoundError` | The kernel isn't **.venv**. Click the kernel name (top right) → *Python Environments* → **.venv**. |
+| VS Code asks to install `ipykernel` | Click **Install**, or redo step 2 above. |
+| `AuthenticationError` / 401 | Run cell 2 in `START_HERE.ipynb` again, then restart the kernel. |
+| `not a cloned copy of the labs repo` | Use `git clone` (step 1), not *Download ZIP*. |
+| `destination path 'simplilearn-labs' already exists` | You already cloned it. Run `cd simplilearn-labs` and continue. |
 
-The key lives in the `.env` file at the repo root (hidden in the file browser). `sync.py` never overwrites it. Never paste the key into a notebook or share your `.env`.
+The key lives in the `.env` file at the repo root. `sync.py` never overwrites it. Never paste the key into a notebook or share your `.env`.
