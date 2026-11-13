@@ -7,19 +7,21 @@ All 8 lab notebooks for the course live here. Each lab appears in this repo abou
 | | Windows | Mac |
 |---|---|---|
 | **Python 3.12** | [python.org/downloads](https://www.python.org/downloads/) → find **3.12** → *Windows installer (64-bit)*. On the first screen, **tick "Add python.exe to PATH"**. | [python.org/downloads](https://www.python.org/downloads/) → find **3.12** → *macOS 64-bit universal2 installer*. |
-| **Git** | [git-scm.com/downloads/win](https://git-scm.com/downloads/win) → keep all default options. | Open **Terminal**, run `git --version`, click **Install** when asked (10–20 minutes). |
+| **Git** (optional) | [git-scm.com/downloads/win](https://git-scm.com/downloads/win) → keep all default options. | Open **Terminal**, run `git --version`, click **Install** when asked (10–20 minutes). |
 | **VS Code** | [code.visualstudio.com](https://code.visualstudio.com/) | [code.visualstudio.com](https://code.visualstudio.com/) |
 
 Then open VS Code → Extensions (left sidebar) → install **Python** and **Jupyter** (both by Microsoft). Restart VS Code once everything is installed.
 
 ## One-time setup (setup session)
 
-**1. Clone the repo.** In VS Code: *Terminal > New Terminal*, then:
+**1. Get the repo** (either way works; you won't need to repeat it):
 
-```
-git clone https://github.com/Simplilearn-Build-with-LLMs/simplilearn-labs.git
-cd simplilearn-labs
-```
+- **Download ZIP:** on this page click **Code → Download ZIP**, extract it (e.g. into Documents), then in VS Code *File > Open Folder* → the extracted folder (the one that contains `requirements.txt`), and open *Terminal > New Terminal*.
+- **Or with Git:** in VS Code *Terminal > New Terminal*, then:
+  ```
+  git clone https://github.com/Simplilearn-Build-with-LLMs/simplilearn-labs.git
+  cd simplilearn-labs
+  ```
 
 **2. Create the virtual environment and install packages.**
 
@@ -28,7 +30,7 @@ cd simplilearn-labs
 | `py -3.12 -m venv .venv` | `python3.12 -m venv .venv` |
 | `.venv\Scripts\python -m pip install -r requirements.txt` | `.venv/bin/python -m pip install -r requirements.txt` |
 
-**3. Open the folder:** *File > Open Folder* → select `simplilearn-labs`.
+**3. Open the folder** (if you haven't already): *File > Open Folder* → the folder that contains `requirements.txt`.
 
 **4. Open `START_HERE.ipynb`.** Click **Select Kernel** (top right) → *Python Environments* → **.venv**. Then run the three cells (Shift + Enter):
 
@@ -40,7 +42,7 @@ That's it. You won't need to set anything up again.
 
 ## Every session
 
-Open the `simplilearn-labs` folder in VS Code, open `START_HERE.ipynb` and **run cell 1**. New labs appear as new folders. Open today's notebook and make sure the kernel (top right) says **.venv**.
+Open the labs folder in VS Code, open `START_HERE.ipynb` and **run cell 1**. New labs appear as new folders. Open today's notebook and make sure the kernel (top right) says **.venv**.
 
 **If the instructor fixes a notebook during class**, run cell 1 again, then reload the notebook (VS Code will ask, or close and reopen it). If you had already changed that notebook, your version is saved next to it as `<name>.my-copy-MMDD-HHMM.ipynb`, so nothing is lost.
 
@@ -51,7 +53,7 @@ Prefer the terminal? `.venv\Scripts\python sync.py` (Windows) or `.venv/bin/pyth
 | Lab | Folder | Live session | Status |
 |---|---|---|---|
 | 01 | [`lab01_brand_voice`](lab01_brand_voice/) | TBD | Available |
-| 02 | | TBD | Coming soon |
+| 02 | [`lab02_returns_icl`](lab02_returns_icl/) | TBD | Available |
 | 03 | | TBD | Coming soon |
 | 04 | | TBD | Coming soon |
 | 05 | | TBD | Coming soon |
@@ -68,7 +70,7 @@ Prefer the terminal? `.venv\Scripts\python sync.py` (Windows) or `.venv/bin/pyth
 | `ModuleNotFoundError` | The kernel isn't **.venv**. Click the kernel name (top right) → *Python Environments* → **.venv**. |
 | VS Code asks to install `ipykernel` | Click **Install**, or redo step 2 above. |
 | `AuthenticationError` / 401 | Run cell 2 in `START_HERE.ipynb` again, then restart the kernel. |
-| `not a cloned copy of the labs repo` | Use `git clone` (step 1), not *Download ZIP*. |
+| `Could not download the labs` | Check your internet connection and run cell 1 again. |
 | `destination path 'simplilearn-labs' already exists` | You already cloned it. Run `cd simplilearn-labs` and continue. |
 
 The key lives in the `.env` file at the repo root. `sync.py` never overwrites it. Never paste the key into a notebook or share your `.env`.
