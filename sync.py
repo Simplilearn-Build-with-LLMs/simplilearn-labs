@@ -41,7 +41,7 @@ MANIFEST = ROOT / ".labsync_manifest.json"   # what each file looked like at the
 PROTECTED = {".env"}   # student copies always win; never backed up or replaced
 # pip package name -> import name, used to spot missing packages
 REQUIRED_IMPORTS = {"openai": "openai", "python-dotenv": "dotenv", "pandas": "pandas",
-                    "matplotlib": "matplotlib"}
+                    "matplotlib": "matplotlib", "chromadb": "chromadb"}
 
 
 def git(*args, check=True):
@@ -117,7 +117,11 @@ def sha(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def sync_git(reset_prefix):
+def covers(path, prefixes):
+    return any(path.startswith(prefix) for prefix in prefixes)
+
+
+def sync_git(reset_prefixes):
     """Repo was cloned with git: fetch, back up conflicting edits, fast-forward."""
     git("fetch", "--quiet", "origin", BRANCH)
     upstream = set(split_z(git("diff", "--name-only", "-z", "HEAD", f"origin/{BRANCH}")))
@@ -127,7 +131,7 @@ def sync_git(reset_prefix):
     for path in sorted(modified):
         if path in PROTECTED:
             keep[path] = (ROOT / path).read_bytes()
-        elif path in upstream or (reset_prefix and path.startswith(reset_prefix)):
+        elif path in upstream or covers(path, reset_prefixes):
             backups.append(backup(path))      # instructor changed it too -> keep a copy, take the fix
         else:
             keep[path] = (ROOT / path).read_bytes()   # only you changed it -> keep yours
@@ -155,7 +159,7 @@ def download_zip():
         raise SystemExit(f"[sync] Could not download the labs ({e}). Check your internet connection and try again.")
 
 
-def sync_zip(reset_prefix):
+def sync_zip(reset_prefixes):
     """Repo came from Download ZIP: compare with GitHub file by file, no git needed."""
     zf = download_zip()
     try:
@@ -181,7 +185,7 @@ def sync_zip(reset_prefix):
             if mine == up:
                 continue                          # already identical
             base = manifest.get(rel)
-            in_reset = bool(reset_prefix and rel.startswith(reset_prefix))
+            in_reset = covers(rel, reset_prefixes)
             if base == up and not in_reset:
                 continue                          # only the student changed it -> keep theirs
             if base != mine or in_reset:
@@ -199,19 +203,19 @@ def main():
                     help="restore a fresh copy of one lab, e.g. --reset 02 (your files are backed up)")
     args = ap.parse_args()
 
-    reset_prefix = None
+    reset_prefixes = []
     if args.reset:
         num = args.reset.strip().lower().removeprefix("lab").zfill(2)
         matches = [f for f in lab_folders() if f.startswith(f"lab{num}")]
         if not matches:
             raise SystemExit(f"[sync] No lab folder found for '{args.reset}'. Labs: {', '.join(lab_folders())}")
-        reset_prefix = matches[0] + "/"
+        reset_prefixes = [match + "/" for match in matches]
 
     before = set(lab_folders())
     if (ROOT / ".git").exists() and shutil.which("git"):
-        updated, backups = sync_git(reset_prefix)
+        updated, backups = sync_git(reset_prefixes)
     else:
-        updated, backups = sync_zip(reset_prefix)
+        updated, backups = sync_zip(reset_prefixes)
 
     new_labs = sorted(set(lab_folders()) - before)
     updated = [p for p in updated if p.split("/")[0] not in new_labs]

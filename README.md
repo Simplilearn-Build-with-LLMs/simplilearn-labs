@@ -54,7 +54,8 @@ Prefer the terminal? `.venv\Scripts\python sync.py` (Windows) or `.venv/bin/pyth
 |---|---|---|---|
 | 01 | [`lab01_brand_voice`](lab01_brand_voice/) | TBD | Available |
 | 02 | [`lab02_returns_icl`](lab02_returns_icl/) | TBD | Available |
-| 03 | | TBD | Coming soon |
+| 03 A | [`lab03a_inbox_to_appointment`](lab03a_inbox_to_appointment/) | TBD | Available |
+| 03 B | [`lab03b_ask_the_manual`](lab03b_ask_the_manual/) | TBD | Available |
 | 04 | | TBD | Coming soon |
 | 05 | | TBD | Coming soon |
 | 06 | | TBD | Coming soon |

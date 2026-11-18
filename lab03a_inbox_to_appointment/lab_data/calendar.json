@@ -1,0 +1,19 @@
+{
+  "company": "Brickvale Home Services",
+  "timezone": "America/New_York",
+  "today": "2026-10-12",
+  "business_rules": {
+    "working_days": "Monday to Saturday",
+    "working_hours": "08:00-18:00",
+    "technicians": 1,
+    "service_minutes": {"plumbing": 120, "electrical": 90, "hvac": 90, "cleaning": 180}
+  },
+  "appointments": [
+    {"id": "apt_101", "customer": "Maria Gonzalez", "email": "maria.g@example.com", "service": "plumbing", "notes": "Leaking kitchen sink", "address": "18 Birch Lane", "start": "2026-10-13T09:00", "end": "2026-10-13T11:00"},
+    {"id": "apt_102", "customer": "Tom Becker", "email": "tom.becker@example.com", "service": "hvac", "notes": "AC tune-up", "address": "7 Harbor Road", "start": "2026-10-13T13:00", "end": "2026-10-13T14:30"},
+    {"id": "apt_103", "customer": "Aisha Rahman", "email": "aisha.r@example.com", "service": "cleaning", "notes": "Deep clean, 3-bedroom house", "address": "52 Maple Court", "start": "2026-10-14T09:00", "end": "2026-10-14T12:00"},
+    {"id": "apt_104", "customer": "Aisha Rahman", "email": "aisha.r@example.com", "service": "electrical", "notes": "Install two ceiling lights", "address": "52 Maple Court", "start": "2026-10-16T14:00", "end": "2026-10-16T15:30"},
+    {"id": "apt_105", "customer": "Kevin O'Neil", "email": "kevin.oneil@example.com", "service": "plumbing", "notes": "Low water pressure in shower", "address": "301 Quarry Street", "start": "2026-10-15T10:00", "end": "2026-10-15T12:00"},
+    {"id": "apt_106", "customer": "Lucy Park", "email": "lucy.park@example.com", "service": "hvac", "notes": "Furnace inspection", "address": "9 Willow Way", "start": "2026-10-17T10:00", "end": "2026-10-17T11:30"}
+  ]
+}

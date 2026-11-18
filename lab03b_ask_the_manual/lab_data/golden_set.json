@@ -1,0 +1,75 @@
+[
+  {
+    "id": "Q1",
+    "type": "verbatim",
+    "query": "My coffee tastes really bitter, almost burnt. What should I change?",
+    "answer": "This is over-extraction. Set the grinder 1-2 steps coarser, lower the extraction temperature to Low, or reduce the dose.",
+    "source": ["04_troubleshooting#2-over-extraction"]
+  },
+  {
+    "id": "Q2",
+    "type": "verbatim",
+    "query": "The screen says E05 and nothing comes out. What do I do?",
+    "answer": "E05 means the grinder is blocked. Switch off and unplug the machine, empty the bean hopper, and remove any foreign object from the burr chamber with the cleaning brush, then restart.",
+    "source": ["04_troubleshooting#1-error-codes"]
+  },
+  {
+    "id": "Q3",
+    "type": "verbatim",
+    "query": "There's an orange light blinking around the on button. What does it want?",
+    "answer": "A flashing orange ring around the power button means a descaling cycle is due.",
+    "source": ["04_troubleshooting#6-indicator-lights", "03_cleaning_and_maintenance#2-descaling-cycle"]
+  },
+  {
+    "id": "Q4",
+    "type": "multi-hop",
+    "query": "Our tap water is really hard. How should I set up the machine for that, and how often will I have to clean out the scale?",
+    "answer": "Test the water with the strip and set Water Hardness to Level 4 (very hard) for 4 red squares. Installing and activating the AquaPure filter extends the descaling interval. At Level 4 without a filter, the machine prompts for descaling about every 80 brewing cycles.",
+    "source": [
+      "01_setup_and_installation#3-determining-water-hardness",
+      "01_setup_and_installation#4-installing-the-water-filter",
+      "03_cleaning_and_maintenance#2-descaling-cycle"
+    ]
+  },
+  {
+    "id": "Q5",
+    "type": "multi-hop",
+    "query": "I never did the cleaning thing when the light came on, and I used vinegar a couple of times. Now the machine leaks. Will the warranty cover it?",
+    "answer": "Probably not. The warranty excludes damage from scale buildup when descaling was not performed as prompted by the CALC indicator, and damage from descaling products other than Quillbrew DescaleCare. Vinegar-based products can damage the seals in the hydraulic circuit.",
+    "source": [
+      "05_warranty_and_service#3-what-is-not-covered",
+      "03_cleaning_and_maintenance#2-descaling-cycle"
+    ]
+  },
+  {
+    "id": "Q6",
+    "type": "multi-hop",
+    "query": "The milk frother just spits and sputters and I can't get any foam. How do I fix it?",
+    "answer": "Purge the steam wand for 2 seconds before texturing to clear condensed water. If it still sputters, the steam tip holes are likely clogged: unscrew the tip, soak it in warm water for 10 minutes, and clear the three holes with the cleaning pin on the grind adjustment key.",
+    "source": [
+      "04_troubleshooting#5-weak-steam-or-sputtering-steam-wand",
+      "03_cleaning_and_maintenance#4-steam-wand-deep-clean"
+    ]
+  },
+  {
+    "id": "Q7",
+    "type": "unanswerable",
+    "query": "What does error E09 mean?",
+    "answer": "IDK",
+    "note": "Near miss: the error code table lists E01, E03, E05, and E07 only."
+  },
+  {
+    "id": "Q8",
+    "type": "unanswerable",
+    "query": "How much will it cost to fix my machine if the warranty has run out?",
+    "answer": "IDK",
+    "note": "Near miss: out-of-warranty repairs are mentioned, but the manual only says a quote is provided after inspection."
+  },
+  {
+    "id": "Q9",
+    "type": "unanswerable",
+    "query": "How many years does the brew group last before I have to buy a new one?",
+    "answer": "IDK",
+    "note": "Near miss: the manuals cover rinsing and lubricating the brew group and its warranty coverage, but never its lifespan."
+  }
+]
